@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { Home, Sparkles, BedSingle, Headset, BookText, icons, UserPlus, LogIn, LogOut } from 'lucide-react'
+import { Home, Sparkles, BedSingle, Headset, BookText, icons, UserPlus, LogIn, LogOut, ChartNoAxesCombined } from 'lucide-react'
 
 const NavBar = () => {
   const NavLinks = [
@@ -15,14 +15,14 @@ const NavBar = () => {
       icon: BedSingle
     },
     {
+      label: "Popular",
+      path: "popular",
+      icon: ChartNoAxesCombined
+    },
+    {
       label: "Contact",
       path: "contact",
       icon: Headset
-    },
-    {
-      label: "About",
-      path: "about",
-      icon: BookText
     }
   ]
 
@@ -30,9 +30,9 @@ const NavBar = () => {
     <main className='hidden md:grid md:grid-cols-[10%_55%_35%] lg:grid-cols-[15%_35%_50%] shadow-glow-gray px-12 xl:px-34 py-4 z-50'>
 
       {/* LOGO */}
-      <div className=''>
+      <Link to="/" className=''>
         <Sparkles color="#241ba7" size={67} />
-      </div>
+      </Link>
 
       {/* NAVBAR */}
       <nav className='flex justify-between text-gray-900 font-bold'>
