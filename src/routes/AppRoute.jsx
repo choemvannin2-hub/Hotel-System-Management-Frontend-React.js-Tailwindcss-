@@ -17,12 +17,12 @@ const route = createBrowserRouter([
                 element: <h1>All rooms</h1>
             },
             {
-                path: "contact",
-                element: <h1>Contact</h1>
+                path: "popular",
+                element: <h1>Popular</h1>
             },
             {
-                path: "about",
-                element: <h1>About</h1>
+                path: "contact",
+                element: <h1>Contact</h1>
             }
         ]
     }
