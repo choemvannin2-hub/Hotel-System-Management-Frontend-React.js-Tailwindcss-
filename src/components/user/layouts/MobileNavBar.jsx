@@ -1,6 +1,6 @@
 import { BedSingle, BookText, ChartNoAxesCombined, CircleUserRound, Headset, Home, LogIn, Menu, Sparkles, UserPlus, X } from 'lucide-react'
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 
 const MobileNavBar = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -71,14 +71,21 @@ const MobileNavBar = () => {
               const Icon = link.icon
               return (
                 <li key={link.label}>
-                  <Link
+                  <NavLink
                     to={link.path}
+                    end={link.path === '/'}
                     onClick={toggleMenu}
-                    className="flex items-center gap-x-3 p-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors font-medium"
+                    className={({isActive})=>
+                    `flex items-center gap-x-3 p-3 rounded-lg hover:bg-blue-50 transition-colors font-medium ${
+                      isActive 
+                        ? 'bg-blue-50 text-blue-700' 
+                        : 'text-gray-700 hover:text-blue-700'
+                    }`
+                    }
                   >
                     <Icon size={20} />
                     <span>{link.label}</span>
-                  </Link>
+                  </NavLink>
                 </li>
               )
             })}
