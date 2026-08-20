@@ -1,6 +1,6 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
-import { Home, Sparkles, BedSingle, Headset, BookText, icons, UserPlus, LogIn, LogOut, ChartNoAxesCombined } from 'lucide-react'
+import { NavLink, Link } from 'react-router-dom'
+import { Home, Sparkles, BedSingle, Headset, UserPlus, LogIn, LogOut, ChartNoAxesCombined } from 'lucide-react'
 
 const NavBar = () => {
   const NavLinks = [
@@ -11,17 +11,17 @@ const NavBar = () => {
     },
     {
       label: "Properties",
-      path: "properties",
+      path: "/properties",
       icon: BedSingle
     },
     {
       label: "Popular",
-      path: "popular",
+      path: "/popular",
       icon: ChartNoAxesCombined
     },
     {
       label: "Contact",
-      path: "contact",
+      path: "/contact",
       icon: Headset
     }
   ]
@@ -35,14 +35,25 @@ const NavBar = () => {
       </Link>
 
       {/* NAVBAR */}
-      <nav className='flex justify-between text-gray-900 font-bold'>
+      <nav className='flex justify-between items-center text-gray-900 font-bold'>
         {NavLinks.map((link) => {
-          const IconComponent = link.icon // Capitalized variable name for JSX
+          const IconComponent = link.icon
           return (
-            <Link key={link.label} to={link.path} className='flex items-center gap-2 shrink-0'>
+            <NavLink
+              key={link.label}
+              to={link.path}
+              end={link.path === '/'}
+              className={({ isActive }) =>
+                `flex items-center gap-2 shrink-0 transition-colors duration-200 ${
+                  isActive
+                    ? 'text-blue-600 border-b-2 border-blue-600 pb-1'
+                    : 'text-gray-600 hover:text-blue-600'
+                }`
+              }
+            >
               <IconComponent size={20} />
               {link.label}
-            </Link>
+            </NavLink>
           )
         })}
       </nav>
@@ -60,6 +71,7 @@ const NavBar = () => {
           Login
         </Link>
       </div>
+
       {/* Logout */}
       <div className='hidden items-center justify-end space-x-3'>
         <Link className='flex gap-x-2 items-center font-medium border-2 rounded-xl border-rose-700 px-5 py-2 text-rose-700 hover:bg-rose-600 hover:text-white transition-colors duration-200' to="/register">
