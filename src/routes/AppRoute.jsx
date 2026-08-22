@@ -1,4 +1,3 @@
-import React from 'react'
 import MainLayouts from '../layouts/MainLayouts'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Home from '../pages/user/Home'
@@ -8,6 +7,8 @@ import ServerError from '../pages/error/ServerError'
 import RoomDetails from '../pages/user/RoomDetails'
 import About from '../pages/user/About'
 import Contact from '../pages/user/Contact'
+import LoginForm from '../pages/authentication/LoginForm'
+import RegisterForm from '../pages/authentication/RegisterForm'
 
 const route = createBrowserRouter([
     {
@@ -35,6 +36,14 @@ const route = createBrowserRouter([
                 element: <Contact/>
             }
         ]
+    },
+    {
+        path: "/login",
+        element: <LoginForm/>
+    },
+    {
+        path: "/register",
+        element: <RegisterForm/>
     },
     {
         path: "/errorServer",

@@ -1,13 +1,12 @@
-import React from 'react'
 import { Link } from 'react-router-dom'
-import { BedSingle, BookText, ChartNoAxesCombined, Dot, DotIcon, Headset, Home, Mail, MapPin, Phone, Sparkles } from 'lucide-react'
+import { BedSingle, DotIcon, Flag, Headset, Home, Mail, MapPin, Phone, Sparkles } from 'lucide-react'
 
 const Footer = () => {
 
   const NavLinks = [
     { label: "Home", path: "/", icon: Home },
     { label: "Properties", path: "/properties", icon: BedSingle },
-    { label: "Popular", path: "/popular", icon: ChartNoAxesCombined },
+    { label: "About", path: "/about", icon: Flag },
     { label: "Contact", path: "/contact", icon: Headset }
   ]
 

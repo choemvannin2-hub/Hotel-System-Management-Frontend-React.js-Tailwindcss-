@@ -44,10 +44,10 @@ const NavBar = () => {
               to={link.path}
               end={link.path === '/'}
               className={({ isActive }) =>
-                `flex items-center gap-2 shrink-0 transition-colors duration-200 ${
+                `flex items-center gap-2 shrink-0 border-b-2 pb-1 transition-colors duration-200 ${
                   isActive
-                    ? 'text-blue-600 border-b-2 border-blue-600 pb-1'
-                    : 'text-gray-600 hover:text-blue-600'
+                    ? 'text-blue-600 border-blue-600'
+                    : 'text-gray-600 border-transparent hover:text-blue-600'
                 }`
               }
             >
