@@ -1,4 +1,4 @@
-import { BedSingle, BookText, ChartNoAxesCombined, CircleUserRound, Headset, Home, LogIn, Menu, Sparkles, UserPlus, X } from 'lucide-react'
+import { BedSingle, CircleUserRound, Flag, Headset, Home, LogIn, Menu, Sparkles, UserPlus, X } from 'lucide-react'
 import React, { useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 
@@ -8,7 +8,7 @@ const MobileNavBar = () => {
   const NavLinks = [
     { label: "Home", path: "/", icon: Home },
     { label: "Properties", path: "/properties", icon: BedSingle },
-    { label: "Popular", path: "/popular", icon: ChartNoAxesCombined },
+    { label: "About", path: "/about", icon: Flag },
     { label: "Contact", path: "/contact", icon: Headset }
   ]
 

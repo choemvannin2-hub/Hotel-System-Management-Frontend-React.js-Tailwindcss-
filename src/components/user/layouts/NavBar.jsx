@@ -1,6 +1,6 @@
 import React from 'react'
 import { NavLink, Link } from 'react-router-dom'
-import { Home, Sparkles, BedSingle, Headset, UserPlus, LogIn, LogOut, ChartNoAxesCombined } from 'lucide-react'
+import { Home, Sparkles, BedSingle, Headset, UserPlus, LogIn, LogOut, Flag } from 'lucide-react'
 
 const NavBar = () => {
   const NavLinks = [
@@ -15,9 +15,9 @@ const NavBar = () => {
       icon: BedSingle
     },
     {
-      label: "Popular",
-      path: "/popular",
-      icon: ChartNoAxesCombined
+      label: "About",
+      path: "/about",
+      icon: Flag
     },
     {
       label: "Contact",
