@@ -4,7 +4,6 @@ import RoomCard from '../../components/user/RoomCard';
 
 const Rooms = () => {
   const [rooms, setRooms] = useState([]);
-  const [roomTypes, setRoomTypes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -18,7 +17,6 @@ const Rooms = () => {
         console.log(data);
     } catch (err) {
         console.error('Failed to fetch rooms:', err);
-        setError('Unable to load rooms. Please try again later.');
     } finally {
         setLoading(false);
     }

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { CircleDollarSign, Search } from 'lucide-react';
 import DatePicker from 'react-datepicker';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import 'react-datepicker/dist/react-datepicker.css';
-import { addDays, format, setDate, setDay } from 'date-fns'; // for format date
+import { addDays, format } from 'date-fns';
 
 import slideimage from '../../assets/room slide bar.jpg';
 import view1 from '../../assets/view1.jpg';
@@ -16,16 +16,32 @@ import view6 from '../../assets/view6.jpg';
 const Home = () => {
   const [checkIn, setCheckIn] = useState(null);
   const [checkOut, setCheckOut] = useState(null);
+  const [guests, setGuests] = useState(1);
+  const [location, setLocation] = useState('');
 
-  const checkInFormatted = checkIn ? format(checkIn, "yyyy-MM-dd") : null;
-  const checkOutFormatted = checkOut ? format(checkOut, "yyyy-MM-dd") : null;
-  
-  console.log(checkInFormatted);
-  console.log(checkOutFormatted);
-  
+  const navigation = useNavigate();
 
-  // FIXED: check out atleast greater than check in 1 day
+  // change format of date
+  const checkInFormatted = checkIn ? format(checkIn, "yyyy-MM-dd") : '';
+  const checkOutFormatted = checkOut ? format(checkOut, "yyyy-MM-dd") : '';
+
+  // check out at least greater than check in 1 day
   const checkOutMinDate = checkIn ? addDays(checkIn, 1) : addDays(new Date(), 1);
+  // check in at least less than check out 1 day
+  const checkInMaxDate = checkOut ? addDays(checkOut, -1) : null;
+
+  const handleSearch = (e) => {
+    e.preventDefault(); // Prevent full page reload
+
+    const params = new URLSearchParams({
+      location: location,
+      checkIn: checkInFormatted,
+      checkOut: checkOutFormatted,
+      guest: guests.toString()
+    });
+
+    navigation(`/properties?${params.toString()}`);
+  };
 
   return (
     <main className="pt-3 py-14 max-w-7xl mx-auto px-4 lg:px-0">
@@ -47,27 +63,35 @@ const Home = () => {
           </div>
         </div>
 
-        {/* Search Bar */}
-        <div className="absolute flex items-center justify-between bg-white rounded-full -bottom-8 py-3 px-4 lg:px-8 shadow-lg w-[95%] max-w-3xl left-1/2 -translate-x-1/2 border border-gray-100 gap-2 z-10">
-          
+        {/* Search Bar Form */}
+        <form 
+          onSubmit={handleSearch}
+          className="absolute flex items-center justify-between bg-white rounded-full -bottom-8 py-3 px-4 lg:px-8 shadow-lg w-[95%] max-w-3xl left-1/2 -translate-x-1/2 border border-gray-100 gap-2 z-10"
+        >
+          {/* Location */}
           <div className="border-r border-gray-200 hidden lg:block pr-4 flex-1">
             <h1 className="font-semibold text-xs lg:text-sm text-gray-800">Location</h1>
             <input 
               type="text" 
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
               placeholder="Where are you going?" 
               className="border-0 outline-none text-xs text-gray-600 w-full placeholder-gray-400" 
             />
           </div>
 
+          {/* Check-in */}
           <div className="border-r border-gray-200 pr-2 lg:pr-4 flex-1">
             <h1 className="font-semibold text-xs lg:text-sm text-gray-800">Check-in</h1>
             <DatePicker
+              required
               selected={checkIn}
               onChange={(date) => setCheckIn(date)}
               selectsStart
               startDate={checkIn}
               endDate={checkOut}
               minDate={new Date()}
+              maxDate={checkInMaxDate}
               placeholderText="Add date"
               dateFormat="dd-MMM-yy"
               popperPlacement="bottom-start"
@@ -77,9 +101,11 @@ const Home = () => {
             />
           </div>
 
+          {/* Check-out */}
           <div className="border-r border-gray-200 pr-2 lg:pr-4 flex-1">
             <h1 className="font-semibold text-xs lg:text-sm text-gray-800">Check-out</h1>
             <DatePicker
+              required
               selected={checkOut}
               onChange={(date) => setCheckOut(date)}
               selectsEnd
@@ -95,9 +121,13 @@ const Home = () => {
             />
           </div>
 
+          {/* Guests */}
           <div className="pr-2 flex-1">
             <h1 className="font-semibold text-xs lg:text-sm text-gray-800">Guests</h1>
             <input 
+              required
+              value={guests}
+              onChange={(e) => setGuests(e.target.value)}
               type="number" 
               min="1" 
               placeholder="1 guest" 
@@ -105,15 +135,16 @@ const Home = () => {
             />
           </div>
 
+          {/* Submit Button */}
           <div>
             <button 
-              aria-label="Search Rooms" 
-              className="bg-blue-700 p-2.5 lg:p-3.5 rounded-full hover:bg-blue-800 transition shadow-md flex items-center justify-center shrink-0"
+              type="submit"
+              className="bg-blue-700 p-2.5 lg:p-3.5 rounded-full hover:bg-blue-800 transition shadow-md flex items-center justify-center shrink-0 cursor-pointer"
             >
               <Search className="text-white" size={18} />
             </button>
           </div>
-        </div>
+        </form>
       </div>
 
       {/* Hotel Views Gallery */}

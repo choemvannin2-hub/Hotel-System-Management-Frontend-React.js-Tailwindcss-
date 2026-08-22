@@ -1,10 +1,12 @@
 import { Heart, Star, Users } from 'lucide-react'
 import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
 
 const RoomCard = ({ room }) => {
   const [isFavorite, setIsFavorite] = useState(false)
   const rating = room?.rating || 9.5
   const originalPrice = room?.pricePerNight ? (room.pricePerNight * 1.3).toFixed(0) : 0
+
 
   return (
     <div className="flex flex-col md:flex-row rounded-3xl bg-white overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 border border-gray-100">
@@ -83,12 +85,12 @@ const RoomCard = ({ room }) => {
             </div>
           </div>
 
-          <button 
-            type="button" 
+          <Link 
+            to={`details/${room?.id}`}
             className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-2.5 rounded-xl transition-colors duration-200"
           >
             Book now
-          </button>
+          </Link>
         </div>
       </div>
     </div>
