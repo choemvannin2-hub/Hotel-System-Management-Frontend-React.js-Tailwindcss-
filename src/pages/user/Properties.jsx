@@ -5,8 +5,8 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { getAvailableRooms, getRooms } from '../../services/roomService';
-import RoomCard from '../../components/user/common/RoomCard';
-import RoomLoading from '../../components/user/common/RoomLoading';
+import RoomCard from '../../components/common/RoomCard';
+import RoomLoading from '../../components/common/RoomLoading';
 
 const Properties = () => {
   // Local form state
@@ -55,8 +55,8 @@ const Properties = () => {
     const findRooms = async () => {
       setIsLoading(true);
       try {
-        const data = await getRooms();
-        setRooms(data);
+        const response = await getRooms();
+        setRooms(response.body);
       } catch (error) {
         console.error('Failed to fetch rooms:', error);
         navigate('/errorServer');
@@ -70,12 +70,12 @@ const Properties = () => {
     const findAvailableRooms = async () => {
       setIsLoading(true);
       try {
-        const data = await getAvailableRooms({
+        const response = await getAvailableRooms({
           checkIn: urlCheckIn,
           checkOut: urlCheckOut,
           guest: urlGuest,
         });
-        setRooms(data);
+        setRooms(response.body);
       } catch (error) {
         console.error('Failed to fetch rooms:', error);
         navigate('/errorServer');

@@ -1,6 +1,7 @@
 import React from 'react'
 import { NavLink, Link } from 'react-router-dom'
 import { Home, Sparkles, BedSingle, Headset, UserPlus, LogIn, LogOut, Flag } from 'lucide-react'
+import {useAuth} from '../../contexts/AuthContext'
 
 const NavBar = () => {
   const NavLinks = [
@@ -25,6 +26,8 @@ const NavBar = () => {
       icon: Headset
     }
   ]
+
+  const {isAuthenticated, logout} = useAuth();
 
   return (
     <main className='hidden md:grid md:grid-cols-[10%_55%_35%] lg:grid-cols-[15%_35%_50%] shadow-glow-gray px-12 xl:px-34 py-4 z-50'>
@@ -58,27 +61,38 @@ const NavBar = () => {
         })}
       </nav>
 
-      {/* AUTHENTICATION */}
-      <div className='flex items-center justify-end space-x-3 '>
-        {/* Sign Up */}
-        <Link className='flex gap-x-2 items-center font-medium border-2 rounded-xl border-blue-700 px-5 py-2 text-blue-700 hover:bg-blue-600 hover:text-white transition-colors duration-200' to="/register">
-          <UserPlus size={18} />
-          Sign Up
-        </Link>
-        {/* Login */}
-        <Link className='flex gap-x-2 items-center bg-blue-600 hover:bg-blue-700 text-white font-medium px-6.5 py-2.5 rounded-xl transition-colors duration-200' to="/login">
-          <LogIn size={18} />
-          Login
-        </Link>
-      </div>
+      {/* AUTHENTICATION ACTION BUTTONS */}
+      {!isAuthenticated ? (
+        /* Guest View: Sign Up / Login */
+        <div className='flex items-center justify-end space-x-3'>
+          <Link 
+            className='flex gap-x-2 items-center font-medium border-2 rounded-xl border-blue-700 px-5 py-2 text-blue-700 hover:bg-blue-600 hover:text-white transition-colors duration-200' 
+            to="/register"
+          >
+            <UserPlus size={18} />
+            Sign Up
+          </Link>
+          <Link 
+            className='flex gap-x-2 items-center bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-2.5 rounded-xl transition-colors duration-200' 
+            to="/login"
+          >
+            <LogIn size={18} />
+            Login
+          </Link>
+        </div>
+      ) : (
+        /* Authenticated View: Logout */
+        <div className='flex items-center justify-end space-x-3'>
+          <button 
+            onClick={logout}
+            className='flex gap-x-2 items-center font-medium border-2 rounded-xl border-rose-700 px-5 py-2 text-rose-700 hover:bg-rose-600 hover:text-white transition-colors duration-200 cursor-pointer'
+          >
+            <LogOut size={18} />
+            Logout
+          </button>
+        </div>
+      )}
 
-      {/* Logout */}
-      <div className='hidden items-center justify-end space-x-3'>
-        <Link className='flex gap-x-2 items-center font-medium border-2 rounded-xl border-rose-700 px-5 py-2 text-rose-700 hover:bg-rose-600 hover:text-white transition-colors duration-200' to="/register">
-          <LogOut size={18} />
-          Sign Up
-        </Link>
-      </div>
     </main>
   )
 }

@@ -1,40 +1,61 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { getRoomById } from '../../services/roomService';
 import { Users } from 'lucide-react';
 import DatePicker from 'react-datepicker';
 import { addDays } from 'date-fns';
+import { useAuth } from '../../contexts/AuthContext';
 
 const RoomDetails = () => {
 
-    const {id} = useParams(); // get dynamic value from parameter path
-    const [room, setRoom] = useState({});  
-    const [isLoading, setIsLoading] = useState(true);
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+  const [showPayment, setShowPayment] = useState(false);
 
-    const [checkIn, setCheckIn] = useState(null);
-    const [checkOut, setCheckOut] = useState(null);
+  const {id} = useParams(); // get dynamic value from parameter path
+  const [room, setRoom] = useState({});  
+  const [isLoading, setIsLoading] = useState(true);
+
+  const [checkIn, setCheckIn] = useState(null);
+  const [checkOut, setCheckOut] = useState(null);
 
 
-    // Minimum checkout date rule
-    const minCheckOutDate = checkIn ? addDays(checkIn, 1) : addDays(new Date(), 1);
-    // Maximum checkin date rule
-    const maxCheckInDate = checkOut ? addDays(checkOut, -1) : null;
+  // Minimum checkout date rule
+  const minCheckOutDate = checkIn ? addDays(checkIn, 1) : addDays(new Date(), 1);
+  // Maximum checkin date rule
+  const maxCheckInDate = checkOut ? addDays(checkOut, -1) : null;
 
-    useEffect(()=>{
-      const getRoomDetails = async()=>{
-        try {
-          const data = await getRoomById(id);
-          console.log(data);
-          
-          setRoom(data)
-        } catch (error) {
-          console.error("Fetching error:", error);
-        }
-        setIsLoading(false);
+  useEffect(()=>{
+    const getRoomDetails = async()=>{
+      try {
+        const response = await getRoomById(id);
+        console.log(response.body);
+        
+        setRoom(response.body)
+      } catch (error) {
+        console.error("Fetching error:", error);
       }
-      getRoomDetails();
-    }, [])
-    
+      setIsLoading(false);
+    }
+    getRoomDetails();
+  }, [])
+  
+  if(isLoading){
+    return <h1>Loading...</h1>
+  }
+
+  const handleBooking = () => {
+    if (!isAuthenticated) {
+      navigate('/login', {
+        state: {
+          from: `/properties/details/${room.id}`
+        }
+      });
+      return;
+    }
+
+    setShowPayment(true);
+  };
 
   return (
     <main className='p-4 lg:p-12'>
@@ -63,6 +84,7 @@ const RoomDetails = () => {
                 </label>
                 <div className="w-full">
                   <DatePicker
+                    required
                     id="check-in"
                     selected={checkIn}
                     onChange={(date) => setCheckIn(date)}
@@ -90,6 +112,7 @@ const RoomDetails = () => {
                 </label>
                 <div className="w-full">
                   <DatePicker
+                    required
                     id="check-out"
                     selected={checkOut}
                     onChange={(date) => setCheckOut(date)}
@@ -145,7 +168,9 @@ const RoomDetails = () => {
         {/* Button side */}
         
         <section className='grid lg:col-start-2 py-3 lg:py-14'>
-          <button className='bg-blue-600 text-white/90 py-2 rounded-full hover:bg-blue-700'>
+          <button 
+          onClick={handleBooking}
+          className='bg-blue-600 text-white/90 py-2 rounded-full hover:bg-blue-700'>
             Book for ${(room?.pricePerNight)*3}
             </button>
         </section>
