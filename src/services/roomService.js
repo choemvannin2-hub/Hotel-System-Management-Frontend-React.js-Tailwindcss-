@@ -1,16 +1,29 @@
 import api from "../api/axiosClient"
+import { getAvailableRoomsApi, getRoomByIdApi, getRoomsApi } from "../api/roomApi";
 
-export const getRooms = async ()=>{
-    const response = await api.get("/rooms/all");
-    return response.data;
+export const getRoomsService = async () => {
+    try {
+        const response = await getRoomsApi();
+        return response.data;
+    } catch (error) {
+        console.log("GET ROOM ERROR:", error);   
+    }
 }
 
-export const getRoomById = async(id)=>{
-    const response = await api.get(`/rooms/${id}`);
-    return response.data;
+export const getRoomByIdService = async (id) => {
+    try {
+        const response = await getRoomByIdApi(id);
+        return response.data;
+    } catch (error) {
+        console.log("GET ROOM ERROR:", error);
+    }
 }
 
-export const getAvailableRooms = async(data)=>{
-    const response = await api.post("rooms/available", data);
-    return response.data;
+export const getAvailableRoomsService = async (data) => {
+    try {
+        const response = await getAvailableRoomsApi(data);
+        return response.data;
+    } catch (error) {
+        console.log('GET ROOM ERROR:', error);
+    }
 }

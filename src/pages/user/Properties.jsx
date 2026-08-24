@@ -1,10 +1,10 @@
-import { addDays, format, parseISO } from 'date-fns';
+import { addDays, format } from 'date-fns';
 import { ArrowLeft, CalendarCheck, CalendarX, MapPin, Users, ChevronDown } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { getAvailableRooms, getRooms } from '../../services/roomService';
+import { getAvailableRoomsService, getRoomsService } from '../../services/roomService';
 import RoomCard from '../../components/common/RoomCard';
 import RoomLoading from '../../components/common/RoomLoading';
 
@@ -51,26 +51,29 @@ const Properties = () => {
     }
 
 
-    // Fetch all room if no filter find
-    const findRooms = async () => {
-      setIsLoading(true);
+    // LOAD ALL ROOMS
+    const loadRooms = async () => {
       try {
-        const response = await getRooms();
-        setRooms(response.body);
+        setIsLoading(true);
+        
+        const data = await getRoomsService();
+        const result = data?.body ?? data;
+
+        setRooms(Array.isArray(result) ? result : []);
       } catch (error) {
-        console.error('Failed to fetch rooms:', error);
+        console.error(error);
         navigate('/errorServer');
       } finally {
         setIsLoading(false);
       }
     }
 
-
+    
     // Fetch available rooms
     const findAvailableRooms = async () => {
       setIsLoading(true);
       try {
-        const response = await getAvailableRooms({
+        const response = await getAvailableRoomsService({
           checkIn: urlCheckIn,
           checkOut: urlCheckOut,
           guest: urlGuest,
@@ -89,7 +92,7 @@ const Properties = () => {
     if ((urlCheckIn && urlCheckOut) || urlGuest) {
         findAvailableRooms();
     } else{
-      findRooms();
+      loadRooms();
     }
   }, [searchParams, navigate]);
 

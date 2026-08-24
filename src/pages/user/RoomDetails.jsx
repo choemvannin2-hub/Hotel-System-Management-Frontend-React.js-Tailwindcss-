@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom'
-import { getRoomById } from '../../services/roomService';
+import { getRoomByIdService } from '../../services/roomService';
 import { Users } from 'lucide-react';
 import DatePicker from 'react-datepicker';
 import { addDays } from 'date-fns';
@@ -28,7 +28,7 @@ const RoomDetails = () => {
   useEffect(()=>{
     const getRoomDetails = async()=>{
       try {
-        const response = await getRoomById(id);
+        const response = await getRoomByIdService(id);
         console.log(response.body);
         
         setRoom(response.body)
