@@ -1,6 +1,11 @@
-import api from "../api/axiosClient";
+import { loginApi } from "../api/authApi";
 
-export const login = async (credentials) => {
-    const response = await api.post("auth/login",credentials)
-    return response.data;
+export const loginService = async (credentials) => {
+    try {
+        const response = await loginApi(credentials);
+        return response.data;
+    } catch (error) {
+        console.error("LOGIN ERROR:", error);
+        throw error;
+    }
 } 

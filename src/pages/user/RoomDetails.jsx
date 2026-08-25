@@ -4,7 +4,7 @@ import { getRoomByIdService } from '../../services/roomService';
 import { Users } from 'lucide-react';
 import DatePicker from 'react-datepicker';
 import { addDays } from 'date-fns';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../hooks/useAuth';
 
 const RoomDetails = () => {
 

@@ -1,54 +1,65 @@
-import { createContext, useContext, useState } from "react";
-import { login as loginService } from "../services/authService";
+import { createContext, useEffect, useState } from "react";
+import { loginService } from "../services/authService";
 
-const AuthContext = createContext();
+export const AuthContext = createContext();
 
-export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(() => {
-    const storedUser = localStorage.getItem("user");
-    return storedUser ? JSON.parse(storedUser) : null;
-  });
+export const AuthProvider = ({ children}) => {
+
+  const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Restore Authentication when application start
+  useEffect( () => {
+    const token = localStorage.getItem('token');
+    const userStored = localStorage.getItem('user');
+
+    if (token && userStored) {
+      setUser(JSON.parse(userStored));
+    }
+
+    setIsLoading(false);
+  },[])
 
   const login = async (credentials) => {
-    // 1. Call backend service directly
-    const res = await loginService(credentials);
-    const data = res?.data || res; // Handles axios wrapper differences
+    const response = await loginService(credentials);
+    const userData = response.body;
+    
+    // store JWT token
+    localStorage.setItem('token',userData.token);
 
-    const userData = {
-      email: data.email,
-      phone: data.phone,
-      role: data.role,
-    };
+    // store user information
+    localStorage.setItem('user', JSON.stringify({
+      email: userData.email,
+      phone: userData.phone, 
+      role: userData.role
+    }))
 
-    // 2. Save token and normalized user info
-    if (data.token) {
-      localStorage.setItem("token", data.token);
-    }
-    localStorage.setItem("user", JSON.stringify(userData));
-
-    setUser(userData);
-    return data;
-  };
+    setUser({
+      email: userData.email,
+      phone: userData.phone,
+      role: userData.role
+    })
+    return response;
+  }
 
   const logout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    setToken(null);
-    setUser(null);
-  };
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
 
-  return (
-    <AuthContext.Provider
-      value={{
-        user,
-        login,
-        logout,
-        isAuthenticated: !!user,
-      }}
-    >
+    setUser(null);
+  }
+
+  const values = {
+    user, 
+    isLoading, 
+    login, 
+    logout
+  }
+
+  return(
+    <AuthContext.Provider value={values}
+      >
       {children}
     </AuthContext.Provider>
-  );
-};
-
-export const useAuth = () => useContext(AuthContext);
+  )
+}

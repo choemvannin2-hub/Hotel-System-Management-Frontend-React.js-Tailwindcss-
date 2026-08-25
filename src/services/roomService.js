@@ -6,7 +6,8 @@ export const getRoomsService = async () => {
         const response = await getRoomsApi();
         return response.data;
     } catch (error) {
-        console.log("GET ROOM ERROR:", error);   
+        console.log("GET ROOM ERROR:", error);
+        throw error; 
     }
 }
 
@@ -16,6 +17,7 @@ export const getRoomByIdService = async (id) => {
         return response.data;
     } catch (error) {
         console.log("GET ROOM ERROR:", error);
+        throw error;
     }
 }
 
@@ -25,5 +27,6 @@ export const getAvailableRoomsService = async (data) => {
         return response.data;
     } catch (error) {
         console.log('GET ROOM ERROR:', error);
+        throw error;
     }
 }

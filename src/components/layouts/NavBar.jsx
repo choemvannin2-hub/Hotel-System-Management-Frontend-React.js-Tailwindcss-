@@ -1,7 +1,7 @@
 import React from 'react'
 import { NavLink, Link } from 'react-router-dom'
 import { Home, Sparkles, BedSingle, Headset, UserPlus, LogIn, LogOut, Flag } from 'lucide-react'
-import {useAuth} from '../../contexts/AuthContext'
+import { useAuth } from '../../hooks/useAuth'
 
 const NavBar = () => {
   const NavLinks = [
@@ -27,7 +27,11 @@ const NavBar = () => {
     }
   ]
 
-  const {isAuthenticated, logout} = useAuth();
+  const {user, isLoading, logout} = useAuth();
+
+  if (isLoading){
+    return;
+  }
 
   return (
     <main className='hidden md:grid md:grid-cols-[10%_55%_35%] lg:grid-cols-[15%_35%_50%] shadow-glow-gray px-12 xl:px-34 py-4 z-50'>
@@ -62,7 +66,7 @@ const NavBar = () => {
       </nav>
 
       {/* AUTHENTICATION ACTION BUTTONS */}
-      {!isAuthenticated ? (
+      {!user ? (
         /* Guest View: Sign Up / Login */
         <div className='flex items-center justify-end space-x-3'>
           <Link 

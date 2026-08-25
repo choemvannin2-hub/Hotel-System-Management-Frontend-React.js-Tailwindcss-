@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff, Building2 } from 'lucide-react';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../hooks/useAuth';
 
 const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -25,7 +25,9 @@ const LoginForm = () => {
     e.preventDefault();
 
     try {
-      await login(formData); // Handles API call + Context update
+      const response = await login(formData)
+      console.log(response);
+      
       navigate(from, { replace: true });
     } catch (error) {
       console.error("Login failed:", error.response?.data || error.message);
