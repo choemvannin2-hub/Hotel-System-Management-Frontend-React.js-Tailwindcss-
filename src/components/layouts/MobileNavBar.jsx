@@ -1,9 +1,13 @@
-import { BedSingle, CircleUserRound, Flag, Headset, Home, LogIn, Menu, Sparkles, UserPlus, X } from 'lucide-react'
+import { BedSingle, Flag, Headset, Home, LogIn, LogOut, Menu, Sparkles, UserPlus, X } from 'lucide-react'
 import React, { useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
+import { useAuth } from '../../hooks/useAuth'
 
 const MobileNavBar = () => {
   const [isOpen, setIsOpen] = useState(false)
+  const { user, isLoading, logout } = useAuth()
+  const email = user?.email || ''
+  const emailInitial = email.charAt(0).toUpperCase() || 'U'
 
   const NavLinks = [
     { label: "Home", path: "/", icon: Home },
@@ -34,9 +38,18 @@ const MobileNavBar = () => {
         </Link>
 
         {/* User Profile */}
-        <button aria-label="User profile" className="text-white hover:opacity-80 transition-opacity">
-          <CircleUserRound size={28} />
-        </button>
+        {user ? (
+          <div
+            aria-label={`${email}'s profile`}
+            className="flex size-8 items-center justify-center rounded-full bg-white text-sm font-bold text-blue-700 shadow-sm"
+          >
+            {emailInitial}
+          </div>
+        ) : (
+          <Link to="/login" aria-label="Login" className="text-white hover:opacity-80 transition-opacity">
+            <LogIn size={26} />
+          </Link>
+        )}
       </div>
 
       {/* Background Overlay */}
@@ -93,36 +106,49 @@ const MobileNavBar = () => {
         </nav>
 
         {/* Authentication */}
-        <div className="p-4 border-t border-gray-100 flex flex-col gap-2 bg-gray-50 shrink-0">
-          {/* Sign up */}
-          <Link
-            to="/signup"
-            onClick={toggleMenu}
-            className="flex items-center justify-center gap-x-2 w-full py-2.5 px-4 bg-blue-700 hover:bg-blue-800 text-white font-medium rounded-lg shadow-sm transition-colors text-center"
-          >
-            <UserPlus size={18} />
-            <span>Sign Up</span>
-          </Link>
-
-          {/* Login */}
-          <Link
-            to="/login"
-            onClick={toggleMenu}
-            className="flex items-center justify-center gap-x-2 w-full py-2 px-4 bg-white hover:bg-gray-100 text-gray-700 border border-gray-300 font-medium rounded-lg transition-colors text-center"
-          >
-            <LogIn size={18} />
-            <span>Log In</span>
-          </Link>
-
-          {/* Logout */}
-          <Link
-            to="/logout"
-            onClick={toggleMenu}
-            className="hidden items-center justify-center gap-x-2 w-full py-2 px-4 bg-white hover:bg-gray-100 text-red-700 border border-red-700 font-medium rounded-lg transition-colors text-center"
-          >
-            <LogIn size={18} />
-            <span>Log Out</span>
-          </Link>
+        <div className="p-4 border-t border-gray-100 bg-gray-50 shrink-0">
+          {user ? (
+            <div className="flex flex-col gap-3">
+              <div className="flex min-w-0 items-center gap-x-3 rounded-xl bg-white p-3 shadow-sm">
+                <div className="flex size-11 shrink-0 items-center justify-center rounded-full bg-linear-to-br from-blue-600 to-indigo-700 text-base font-bold text-white">
+                  {emailInitial}
+                </div>
+                <div className="min-w-0">
+                  <p className="text-xs font-medium text-gray-500">Signed in as</p>
+                  <p className="truncate text-sm font-semibold text-gray-800" title={email}>{email}</p>
+                </div>
+              </div>
+              <button
+                onClick={() => {
+                  logout()
+                  setIsOpen(false)
+                }}
+                className="flex items-center justify-center gap-x-2 w-full py-2.5 px-4 bg-white hover:bg-rose-600 text-rose-700 hover:text-white border border-rose-700 font-medium rounded-lg transition-colors cursor-pointer"
+              >
+                <LogOut size={18} />
+                <span>Log Out</span>
+              </button>
+            </div>
+          ) : !isLoading && (
+            <div className="flex flex-col gap-2">
+              <Link
+                to="/register"
+                onClick={toggleMenu}
+                className="flex items-center justify-center gap-x-2 w-full py-2.5 px-4 bg-blue-700 hover:bg-blue-800 text-white font-medium rounded-lg shadow-sm transition-colors text-center"
+              >
+                <UserPlus size={18} />
+                <span>Sign Up</span>
+              </Link>
+              <Link
+                to="/login"
+                onClick={toggleMenu}
+                className="flex items-center justify-center gap-x-2 w-full py-2 px-4 bg-white hover:bg-gray-100 text-gray-700 border border-gray-300 font-medium rounded-lg transition-colors text-center"
+              >
+                <LogIn size={18} />
+                <span>Log In</span>
+              </Link>
+            </div>
+          )}
         </div>
       </aside>
     </header>

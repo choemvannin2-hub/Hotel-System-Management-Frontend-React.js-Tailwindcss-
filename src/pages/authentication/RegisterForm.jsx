@@ -19,6 +19,7 @@ const RegisterForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log('Registering with:', formData);
+    // NOTED: dont forget to navigate to login page after register successs.
   };
 
   return (

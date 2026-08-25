@@ -8,13 +8,13 @@ import { useAuth } from '../../hooks/useAuth';
 
 const RoomDetails = () => {
 
-  const { isAuthenticated } = useAuth();
+  const { user, isLoading } = useAuth();
   const navigate = useNavigate();
   const [showPayment, setShowPayment] = useState(false);
 
   const {id} = useParams(); // get dynamic value from parameter path
   const [room, setRoom] = useState({});  
-  const [isLoading, setIsLoading] = useState(true);
+  // const [isLoading, setIsLoading] = useState(true);
 
   const [checkIn, setCheckIn] = useState(null);
   const [checkOut, setCheckOut] = useState(null);
@@ -35,17 +35,12 @@ const RoomDetails = () => {
       } catch (error) {
         console.error("Fetching error:", error);
       }
-      setIsLoading(false);
     }
     getRoomDetails();
   }, [])
-  
-  if(isLoading){
-    return <h1>Loading...</h1>
-  }
 
   const handleBooking = () => {
-    if (!isAuthenticated) {
+    if (!user) {
       navigate('/login', {
         state: {
           from: `/properties/details/${room.id}`

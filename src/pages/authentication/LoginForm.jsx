@@ -1,7 +1,7 @@
 
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Mail, Lock, Eye, EyeOff, Building2 } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, Building2, X } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 
 const LoginForm = () => {
@@ -34,10 +34,13 @@ const LoginForm = () => {
     }
   };
 
+  const handleBackBtn = () => {
+    navigate(from, {replace: true})
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
       <div className="w-full max-w-4xl bg-white rounded-3xl shadow-xl overflow-hidden grid grid-cols-1 md:grid-cols-2">
-        
         {/* Left Side: Brand Showcase */}
         <div className="relative hidden md:flex flex-col justify-between p-10 bg-slate-900 text-white overflow-hidden">
           <div 
@@ -62,7 +65,14 @@ const LoginForm = () => {
         </div>
 
         {/* Right Side: Login Form */}
-        <div className="p-8 sm:p-12 flex flex-col justify-center">
+        <div className="relative p-8 sm:p-12 flex flex-col justify-center">
+          {/* back button */}
+          <button 
+          onClick={handleBackBtn}
+          className='absolute z-50 text-black right-6 top-6'>
+            <X size={24} />
+          </button>
+
           <div className="mb-8">
             <h2 className="text-2xl font-bold text-gray-900">Sign In to Your Account</h2>
             <p className="text-sm text-gray-500 mt-1">

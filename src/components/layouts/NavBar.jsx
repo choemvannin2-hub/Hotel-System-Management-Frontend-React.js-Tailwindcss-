@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { NavLink, Link } from 'react-router-dom'
 import { Home, Sparkles, BedSingle, Headset, UserPlus, LogIn, LogOut, Flag } from 'lucide-react'
 import { useAuth } from '../../hooks/useAuth'
 
 const NavBar = () => {
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false)
   const NavLinks = [
     {
       label: "Home",
@@ -28,6 +29,8 @@ const NavBar = () => {
   ]
 
   const {user, isLoading, logout} = useAuth();
+  const email = user?.email || '';
+  const emailInitial = email.charAt(0).toUpperCase() || 'U';
 
   if (isLoading){
     return;
@@ -85,15 +88,39 @@ const NavBar = () => {
           </Link>
         </div>
       ) : (
-        /* Authenticated View: Logout */
-        <div className='flex items-center justify-end space-x-3'>
-          <button 
-            onClick={logout}
-            className='flex gap-x-2 items-center font-medium border-2 rounded-xl border-rose-700 px-5 py-2 text-rose-700 hover:bg-rose-600 hover:text-white transition-colors duration-200 cursor-pointer'
+        /* Authenticated View: Profile dropdown */
+        <div className='relative flex items-center justify-end'>
+          <button
+            type='button'
+            onClick={() => setIsProfileMenuOpen((isOpen) => !isOpen)}
+            aria-label='Open profile menu'
+            aria-expanded={isProfileMenuOpen}
+            className='flex size-11 items-center justify-center rounded-full bg-linear-to-br from-blue-600 to-indigo-700 text-base font-bold text-white shadow-sm transition-transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 cursor-pointer'
           >
-            <LogOut size={18} />
-            Logout
+            {emailInitial}
           </button>
+
+          {isProfileMenuOpen && (
+            <div className='absolute right-0 top-14 z-50 w-64 rounded-xl border border-gray-100 bg-white p-3 shadow-xl'>
+              <div className='flex min-w-0 items-center gap-x-3 border-b border-gray-100 pb-3'>
+                <div className='flex size-11 shrink-0 items-center justify-center rounded-full bg-linear-to-br from-blue-600 to-indigo-700 text-base font-bold text-white'>
+                  {emailInitial}
+                </div>
+                <div className='min-w-0'>
+                  <p className='text-xs font-medium text-gray-500'>Signed in as</p>
+                  <p className='truncate text-sm font-semibold text-gray-800' title={email}>{email}</p>
+                </div>
+              </div>
+              <button
+                type='button'
+                onClick={logout}
+                className='mt-3 flex w-full items-center justify-center gap-x-2 rounded-lg border border-rose-700 px-4 py-2.5 font-medium text-rose-700 transition-colors hover:bg-rose-600 hover:text-white cursor-pointer'
+              >
+                <LogOut size={18} />
+                Logout
+              </button>
+            </div>
+          )}
         </div>
       )}
 
