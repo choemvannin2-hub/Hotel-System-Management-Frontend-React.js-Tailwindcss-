@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { getRoomByIdService } from '../../services/roomService';
-import { ArrowLeft, Users } from 'lucide-react';
+import { ArrowLeft, CircleAlert, Users } from 'lucide-react';
 import DatePicker from 'react-datepicker';
 import { addDays, differenceInDays } from 'date-fns';
 import { useAuth } from '../../hooks/useAuth';
+import toast from 'react-hot-toast';
 
 const RoomDetails = () => {
   const { user } = useAuth();
@@ -12,12 +13,16 @@ const RoomDetails = () => {
   const location = useLocation(); // current location path
   const [showPayment, setShowPayment] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
-
   const { id } = useParams();
   const [room, setRoom] = useState({});
-
   const [checkIn, setCheckIn] = useState(null);
   const [checkOut, setCheckOut] = useState(null);
+  // date validation
+  const minCheckOutDate = checkIn ? addDays(checkIn, 1) : addDays(new Date(), 1);
+  const maxCheckInDate = checkOut ? addDays(checkOut, -1) : null;
+  // handle price
+  const totalDates = (checkIn && checkOut) ? differenceInDays(checkOut, checkIn) : null
+  const totalPrice = (totalDates) ? (totalDates * room.pricePerNight) : (room.pricePerNight)  
 
   // handle book date if user search in properties page.
   const [searchParams] = useSearchParams();
@@ -31,9 +36,6 @@ const RoomDetails = () => {
     }
   }, [searchParams]);
 
-  // date validation
-  const minCheckOutDate = checkIn ? addDays(checkIn, 1) : addDays(new Date(), 1);
-  const maxCheckInDate = checkOut ? addDays(checkOut, -1) : null;
 
   useEffect(() => {
     const getRoomDetails = async () => {
@@ -47,11 +49,6 @@ const RoomDetails = () => {
     getRoomDetails();
   }, [id]);
 
-  
-  // handle price
-  const totalDates = (checkIn && checkOut) ? differenceInDays(checkOut, checkIn) : null
-  const totalPrice = (totalDates) ? (totalDates * room.pricePerNight) : (room.pricePerNight)  
-  
 
   const handleBooking = () => {
     // validation check
@@ -59,14 +56,19 @@ const RoomDetails = () => {
       setErrorMsg('Please select Check-in and Check-out dates.');
       return;
     }
-
     setErrorMsg('');
-
+    
     // Auth check
     if (!user) {
+      toast.error("Please login before booking!", {
+        duration: 4000,
+        position: 'top-right',
+        className: 'bg-slate-900 text-white rounded-2xl p-4 shadow-2xl text-sm font-medium',
+        icon: <CircleAlert className="h-5 w-5 text-sky-500 shrink-0" />,
+      });
       navigate('/login', {
         state: {
-          from: location
+          from: location,
         }
       });
       return;

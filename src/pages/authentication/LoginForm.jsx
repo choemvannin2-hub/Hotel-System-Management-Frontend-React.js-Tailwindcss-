@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff, Building2, X } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
+import {customToast} from '../../utils/toast.jsx'
 
 const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -26,11 +27,12 @@ const LoginForm = () => {
 
     try {
       const response = await login(formData)
-      console.log(response);
+      customToast.success(response.message);
       
       navigate(from, { replace: true });
     } catch (error) {
       console.error("Login failed:", error.response?.data || error.message);
+      customToast.error(error.response?.data?.message || error.message)
     }
   };
 
@@ -105,7 +107,7 @@ const LoginForm = () => {
                   value={formData.identifier}
                   onChange={handleChange}
                   placeholder="guest@example.com"
-                  className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-gray-200 text-sm outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all"
+                  className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-gray-200 text-[16px] outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all"
                 />
               </div>
             </div>
@@ -127,7 +129,7 @@ const LoginForm = () => {
                   value={formData.password}
                   onChange={handleChange}
                   placeholder="••••••••"
-                  className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-gray-200 text-sm outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all"
+                  className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-gray-200 text-[16px] outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all"
                 />
                 <button
                   type="button"

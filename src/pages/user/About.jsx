@@ -12,7 +12,7 @@ const About = () => {
   const credits = [
     {
       name: "Choem Vannin",
-      role: "Project Management",
+      role: "Project Manager",
       image: choemvannin,
       bio: "Computer Science student with hands-on experience in full-stack development using Java, Spring Boot, React.js, Vue.js, and SQL. Interested in backend and full-stack development, with a strong willingness to learn and grow."
     },

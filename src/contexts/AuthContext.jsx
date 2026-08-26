@@ -1,5 +1,6 @@
 import { createContext, useEffect, useState } from "react";
-import { loginService } from "../services/authService";
+import { loginService, registerService } from "../services/authService";
+import { customToast } from '../utils/toast.jsx';
 
 export const AuthContext = createContext();
 
@@ -47,12 +48,20 @@ export const AuthProvider = ({ children}) => {
     localStorage.removeItem('user');
 
     setUser(null);
+
+    customToast.success("Logout successfully.")
   }
+
+  const register = async (data) => {
+      const response = await registerService(data);
+      return response;
+  };
 
   const values = {
     user, 
     isLoading, 
-    login, 
+    login,
+    register,
     logout
   }
 

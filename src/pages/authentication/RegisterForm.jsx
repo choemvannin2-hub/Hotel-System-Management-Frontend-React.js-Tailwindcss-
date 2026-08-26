@@ -1,11 +1,14 @@
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Mail, Lock, User, Phone, Eye, EyeOff, Building2, X } from 'lucide-react';
+import {useAuth} from '../../hooks/useAuth'
+import toast from 'react-hot-toast';
 
 const RegisterForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
-    fullName: '',
+    first_name: '',
+    last_name: '',
     email: '',
     phone: '',
     password: '',
@@ -13,21 +16,30 @@ const RegisterForm = () => {
 
   const navigate = useNavigate();
   const location = useLocation();
-  const from = location.state?.from || '/'
+  const from = location.state?.from || '/';
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  // 
+  const {register} = useAuth();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Registering with:', formData);
-    // NOTED: dont forget to navigate to login page after register successs.
-    navigate('/login', {
-      state: {
-        from: from
-      }
-    })
+
+    const response = await register(formData);
+
+    if(response.success) {
+      toast.success(response.message)
+      navigate('/login', {
+        state: {
+          from: from
+        }
+      });
+    }else{
+      toast.error(response.message)
+    }
   };
 
   const handleToLogin = () => {
@@ -35,12 +47,12 @@ const RegisterForm = () => {
       state: {
         from: from
       }
-    })
-  }
+    });
+  };
 
   const handleBackBtn = () => {
-    navigate(from, {replace: true})
-  }
+    navigate(from, { replace: true });
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
@@ -71,7 +83,7 @@ const RegisterForm = () => {
 
         {/* Right Side: Register Form */}
         <div className="relative p-8 sm:p-12 flex flex-col justify-center">
-          {/* // back button */}
+          {/* back button */}
           <button onClick={handleBackBtn} className='absolute top-4 right-6'>
             <X/>
           </button>
@@ -82,22 +94,42 @@ const RegisterForm = () => {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Full Name Field */}
-            <div>
-              <label className="block text-xs font-semibold text-gray-600 uppercase mb-1">
-                Full Name
-              </label>
-              <div className="relative">
-                <User className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-5 w-5" />
-                <input
-                  type="text"
-                  name="fullName"
-                  required
-                  value={formData.fullName}
-                  onChange={handleChange}
-                  placeholder="Choem Vannin"
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 text-sm outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all"
-                />
+            {/* First Name & Last Name Fields side by side */}
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="block text-xs font-semibold text-gray-600 uppercase mb-1">
+                  First Name
+                </label>
+                <div className="relative">
+                  <User className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-5 w-5" />
+                  <input
+                    type="text"
+                    name="first_name"
+                    required
+                    value={formData.first_name}
+                    onChange={handleChange}
+                    placeholder="Choem"
+                    className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 text-[16px] outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-gray-600 uppercase mb-1">
+                  Last Name
+                </label>
+                <div className="relative">
+                  <User className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-5 w-5" />
+                  <input
+                    type="text"
+                    name="last_name"
+                    required
+                    value={formData.last_name}
+                    onChange={handleChange}
+                    placeholder="Vannin"
+                    className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 text-[16px] outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all"
+                  />
+                </div>
               </div>
             </div>
 
@@ -115,7 +147,7 @@ const RegisterForm = () => {
                   value={formData.email}
                   onChange={handleChange}
                   placeholder="guest@example.com"
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 text-sm outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all"
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 text-[16px] outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all"
                 />
               </div>
             </div>
@@ -134,8 +166,8 @@ const RegisterForm = () => {
                   name="phone"
                   value={formData.phone}
                   onChange={handleChange}
-                  placeholder="+ (885) 000-0000  ( Optional )"
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 text-sm outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all"
+                  placeholder="+ (885) 000-0000 ( Optional )"
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 text-[16px] outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all"
                 />
               </div>
             </div>
@@ -154,7 +186,7 @@ const RegisterForm = () => {
                   value={formData.password}
                   onChange={handleChange}
                   placeholder="••••••••"
-                  className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-gray-200 text-sm outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all"
+                  className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-gray-200 text-[16px] outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all"
                 />
                 <button
                   type="button"

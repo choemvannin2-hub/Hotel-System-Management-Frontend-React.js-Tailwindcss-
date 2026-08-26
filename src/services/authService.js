@@ -1,4 +1,4 @@
-import { loginApi } from "../api/authApi";
+import { loginApi, registerApi } from "../api/authApi";
 
 export const loginService = async (credentials) => {
     try {
@@ -9,3 +9,13 @@ export const loginService = async (credentials) => {
         throw error;
     }
 } 
+
+export const registerService = async (data) => {
+    try {
+        const response = await registerApi(data);
+        return response.data;
+    } catch (error) {
+        console.error("REGISTER ERROR:", error);
+        return error.response.data;
+    }
+}

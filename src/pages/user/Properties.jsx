@@ -16,12 +16,10 @@ const Properties = () => {
   const [guest, setGuest] = useState("1");
   const [sort, setSort] = useState('');
   const [title, setTitle] = useState('All Properties');
-
   // Data fetching
   const [rooms, setRooms] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
-
   // URL search parameters
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -49,7 +47,6 @@ const Properties = () => {
     } else {
       setTitle('All Properties');
     }
-
 
     // LOAD ALL ROOMS
     const loadRooms = async () => {
@@ -86,7 +83,6 @@ const Properties = () => {
         setIsLoading(false);
       }
     };
-
 
     // Only search availability if dates were provided
     if ((urlCheckIn && urlCheckOut) || urlGuest) {
