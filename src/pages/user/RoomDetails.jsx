@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { getRoomByIdService } from '../../services/roomService';
 import { Users } from 'lucide-react';
 import DatePicker from 'react-datepicker';
@@ -7,48 +7,66 @@ import { addDays } from 'date-fns';
 import { useAuth } from '../../hooks/useAuth';
 
 const RoomDetails = () => {
-
-  const { user, isLoading } = useAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation(); // current location path
   const [showPayment, setShowPayment] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
 
-  const {id} = useParams(); // get dynamic value from parameter path
-  const [room, setRoom] = useState({});  
-  // const [isLoading, setIsLoading] = useState(true);
+  const { id } = useParams();
+  const [room, setRoom] = useState({});
 
   const [checkIn, setCheckIn] = useState(null);
   const [checkOut, setCheckOut] = useState(null);
 
+  // handle book date if user search in properties page.
+  const [searchParams] = useSearchParams();
+  useEffect(() => {
+    const urlCheckIn = searchParams.get('checkIn');
+    const urlCheckOut = searchParams.get('checkOut');
 
-  // Minimum checkout date rule
+    if (urlCheckIn && urlCheckOut) {
+      setCheckIn(new Date(urlCheckIn));
+      setCheckOut(new Date(urlCheckOut));
+    }
+  }, [searchParams]);
+
+
   const minCheckOutDate = checkIn ? addDays(checkIn, 1) : addDays(new Date(), 1);
-  // Maximum checkin date rule
   const maxCheckInDate = checkOut ? addDays(checkOut, -1) : null;
 
-  useEffect(()=>{
-    const getRoomDetails = async()=>{
+  useEffect(() => {
+    const getRoomDetails = async () => {
       try {
         const response = await getRoomByIdService(id);
-        console.log(response.body);
-        
-        setRoom(response.body)
+        setRoom(response.body);
       } catch (error) {
         console.error("Fetching error:", error);
       }
-    }
+    };
     getRoomDetails();
-  }, [])
+  }, [id]);
 
   const handleBooking = () => {
+    // validation check
+    if (!checkIn || !checkOut) {
+      setErrorMsg('Please select Check-in and Check-out dates.');
+      return;
+    }
+
+    setErrorMsg('');
+
+    // Auth check
     if (!user) {
       navigate('/login', {
         state: {
-          from: `/properties/details/${room.id}`
+          from: location
         }
       });
       return;
     }
 
+    // Proceed to payment
     setShowPayment(true);
   };
 
@@ -58,18 +76,19 @@ const RoomDetails = () => {
         {/* Image side */}
         <section className='flex justify-center'>
           <img
-          src={room?.photoUrl} alt="photo"
-          className='rounded-2xl'
+            src={room?.photoUrl} alt="photo"
+            className='rounded-2xl'
           />
         </section>
-        {/* info details side */}
+
+        {/* Info details side */}
         <section className=''>
-          {/* top part */}
           <div className='grid gap-y-2'>
             <h1 className='text-2xl font-bold'>{room.description}</h1>
             <p className='flex items-center gap-x-2 font-medium text-sm text-gray-500/80'>
               <Users size={12}/> Capacity: {room.capacity}
             </p>
+
             {/* Check in and Check out */}
             <div className='grid pt-4 pb-2 gap-y-2'>
               {/* Check-In Row */}
@@ -79,10 +98,12 @@ const RoomDetails = () => {
                 </label>
                 <div className="w-full">
                   <DatePicker
-                    required
                     id="check-in"
                     selected={checkIn}
-                    onChange={(date) => setCheckIn(date)}
+                    onChange={(date) => {
+                      setCheckIn(date);
+                      setErrorMsg("");
+                    }}
                     selectsStart
                     startDate={checkIn}
                     endDate={checkOut}
@@ -107,11 +128,13 @@ const RoomDetails = () => {
                 </label>
                 <div className="w-full">
                   <DatePicker
-                    required
                     id="check-out"
                     selected={checkOut}
-                    onChange={(date) => setCheckOut(date)}
-                    selectsStart
+                    onChange={(date) => {
+                      setCheckOut(date);
+                      setErrorMsg("");
+                    }}
+                    selectsEnd  //Fixed property for range selection
                     startDate={checkIn}
                     endDate={checkOut}
                     minDate={minCheckOutDate}
@@ -127,51 +150,58 @@ const RoomDetails = () => {
                 </div>
               </div>
             </div>
-            <hr  className='text-gray-500/40'/>
+
+            {/* Error Message display */}
+            {errorMsg && (
+              <p className="text-red-500 text-xs font-semibold">{errorMsg}</p>
+            )}
+
+            <hr className='text-gray-500/40'/>
           </div>
-          
-          {/* bottom part */}
+
+          {/* Bottom part */}
           <div className='grid gap-y-2 pt-6'>
             <h1 className='text-sm font-medium'>{room?.roomType?.name}</h1>
             <div className='grid grid-cols-[30%_70%]'>
               <div className='grid text-gray-500/95 text-sm'>
-                <label htmlFor="">Price Per Night</label>
-                <label htmlFor="">{3} nights</label>
-                <label htmlFor="">Discount</label>
+                <label>Price Per Night</label>
+                <label>3 nights</label>
+                <label>Discount</label>
               </div>
               <div className='grid text-gray-500/95 gap-y-0.5'>
                 <p> ${room?.pricePerNight}</p>
-                <p> ${(room?.pricePerNight)*3}</p>
+                <p> ${(room?.pricePerNight) * 3}</p>
                 <p> none</p>
               </div>
             </div>
-            <hr  className='text-gray-500/40'/>
+            <hr className='text-gray-500/40'/>
           </div>
 
-          {/* total part */}
+          {/* Total part */}
           <div className='pt-4'>
             <div className='grid grid-cols-[30%_70%]'>
               <div className='grid font-medium text-sm'>
-                <label htmlFor="">TOTAL</label>
+                <label>TOTAL</label>
               </div>
               <div className='grid font-medium gap-y-0.5'>
-                <p> ${(room?.pricePerNight)*3}</p>
+                <p> ${(room?.pricePerNight) * 3}</p>
               </div>
             </div>
           </div>
         </section>
+
         {/* Button side */}
-        
         <section className='grid lg:col-start-2 py-3 lg:py-14'>
           <button 
-          onClick={handleBooking}
-          className='bg-blue-600 text-white/90 py-2 rounded-full hover:bg-blue-700'>
-            Book for ${(room?.pricePerNight)*3}
-            </button>
+            onClick={handleBooking}
+            className='bg-blue-600 text-white/90 py-2 rounded-full hover:bg-blue-700 disabled:opacity-50'
+          >
+            Book for ${(room?.pricePerNight) * 3}
+          </button>
         </section>
       </div>
-  </main>
-  )
-}
+    </main>
+  );
+};
 
-export default RoomDetails
+export default RoomDetails;

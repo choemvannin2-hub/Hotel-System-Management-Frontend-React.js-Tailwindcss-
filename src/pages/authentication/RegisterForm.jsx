@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Mail, Lock, User, Phone, Eye, EyeOff, Building2 } from 'lucide-react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { Mail, Lock, User, Phone, Eye, EyeOff, Building2, X } from 'lucide-react';
 
 const RegisterForm = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -10,7 +10,10 @@ const RegisterForm = () => {
     phone: '',
     password: '',
   });
-  
+
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from || '/'
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -20,7 +23,24 @@ const RegisterForm = () => {
     e.preventDefault();
     console.log('Registering with:', formData);
     // NOTED: dont forget to navigate to login page after register successs.
+    navigate('/login', {
+      state: {
+        from: from
+      }
+    })
   };
+
+  const handleToLogin = () => {
+    navigate('/login', {
+      state: {
+        from: from
+      }
+    })
+  }
+
+  const handleBackBtn = () => {
+    navigate(from, {replace: true})
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
@@ -50,7 +70,12 @@ const RegisterForm = () => {
         </div>
 
         {/* Right Side: Register Form */}
-        <div className="p-8 sm:p-12 flex flex-col justify-center">
+        <div className="relative p-8 sm:p-12 flex flex-col justify-center">
+          {/* // back button */}
+          <button onClick={handleBackBtn} className='absolute top-4 right-6'>
+            <X/>
+          </button>
+
           <div className="mb-6">
             <h2 className="text-2xl font-bold text-gray-900">Create an Account</h2>
             <p className="text-sm text-gray-500 mt-1">Fill in your details below to get started.</p>
@@ -153,9 +178,9 @@ const RegisterForm = () => {
           {/* Router Link to Login */}
           <div className="mt-6 text-center text-sm text-gray-500">
             Already have an account?{' '}
-            <Link to="/login" className="text-blue-600 font-semibold hover:underline">
+            <button onClick={handleToLogin} className="text-blue-600 font-semibold hover:underline">
               Sign in
-            </Link>
+            </button>
           </div>
         </div>
       </div>

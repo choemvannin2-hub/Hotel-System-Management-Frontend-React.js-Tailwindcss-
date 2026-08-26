@@ -1,10 +1,14 @@
 import React, { useState } from 'react'
-import { NavLink, Link } from 'react-router-dom'
+import { NavLink, Link, useLocation, useNavigate } from 'react-router-dom'
 import { Home, Sparkles, BedSingle, Headset, UserPlus, LogIn, LogOut, Flag } from 'lucide-react'
 import { useAuth } from '../../hooks/useAuth'
 
 const NavBar = () => {
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false)
+  const {user, isLoading, logout} = useAuth();
+  const email = user?.email || '';
+  const emailInitial = email.charAt(0).toUpperCase() || 'U';
+
   const NavLinks = [
     {
       label: "Home",
@@ -28,9 +32,25 @@ const NavBar = () => {
     }
   ]
 
-  const {user, isLoading, logout} = useAuth();
-  const email = user?.email || '';
-  const emailInitial = email.charAt(0).toUpperCase() || 'U';
+
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleToRegister = () => {
+    navigate('/register', {
+      state: {
+        from: location
+      }
+    })
+  }
+  
+  const handleToLogin = () => {
+    navigate('/login', {
+      state: {
+        from: location
+      }
+    })
+  }
 
   if (isLoading){
     return;
@@ -72,20 +92,20 @@ const NavBar = () => {
       {!user ? (
         /* Guest View: Sign Up / Login */
         <div className='flex items-center justify-end space-x-3'>
-          <Link 
+          <button 
+            onClick={handleToRegister}
             className='flex gap-x-2 items-center font-medium border-2 rounded-xl border-blue-700 px-5 py-2 text-blue-700 hover:bg-blue-600 hover:text-white transition-colors duration-200' 
-            to="/register"
           >
             <UserPlus size={18} />
             Sign Up
-          </Link>
-          <Link 
+          </button>
+          <button 
+            onClick={handleToLogin}
             className='flex gap-x-2 items-center bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-2.5 rounded-xl transition-colors duration-200' 
-            to="/login"
           >
             <LogIn size={18} />
             Login
-          </Link>
+          </button>
         </div>
       ) : (
         /* Authenticated View: Profile dropdown */

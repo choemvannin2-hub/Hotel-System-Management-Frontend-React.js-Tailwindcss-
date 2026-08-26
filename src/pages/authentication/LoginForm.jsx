@@ -34,6 +34,14 @@ const LoginForm = () => {
     }
   };
 
+  const handleToRegister = () => {
+    navigate('/register', {
+      state: {
+        from: from
+      }
+    })
+  }
+
   const handleBackBtn = () => {
     navigate(from, {replace: true})
   }
@@ -141,11 +149,11 @@ const LoginForm = () => {
           </form>
 
           {/* Router Link to Register */}
-          <div className="mt-6 text-center text-sm text-gray-500">
+          <div onClick={handleToRegister} className="mt-6 text-center text-sm text-gray-500">
             Don't have an account?{' '}
-            <Link to="/register" className="text-blue-600 font-semibold hover:underline">
+            <button className="text-blue-600 font-semibold hover:underline">
               Register now
-            </Link>
+            </button>
           </div>
         </div>
       </div>
