@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { getRoomByIdService } from '../../services/roomService';
-import { Users } from 'lucide-react';
+import { ArrowLeft, Users } from 'lucide-react';
 import DatePicker from 'react-datepicker';
-import { addDays } from 'date-fns';
+import { addDays, differenceInDays } from 'date-fns';
 import { useAuth } from '../../hooks/useAuth';
 
 const RoomDetails = () => {
@@ -31,7 +31,7 @@ const RoomDetails = () => {
     }
   }, [searchParams]);
 
-
+  // date validation
   const minCheckOutDate = checkIn ? addDays(checkIn, 1) : addDays(new Date(), 1);
   const maxCheckInDate = checkOut ? addDays(checkOut, -1) : null;
 
@@ -46,6 +46,12 @@ const RoomDetails = () => {
     };
     getRoomDetails();
   }, [id]);
+
+  
+  // handle price
+  const totalDates = (checkIn && checkOut) ? differenceInDays(checkOut, checkIn) : null
+  const totalPrice = (totalDates) ? (totalDates * room.pricePerNight) : (room.pricePerNight)  
+  
 
   const handleBooking = () => {
     // validation check
@@ -165,12 +171,12 @@ const RoomDetails = () => {
             <div className='grid grid-cols-[30%_70%]'>
               <div className='grid text-gray-500/95 text-sm'>
                 <label>Price Per Night</label>
-                <label>3 nights</label>
+                <label>{totalDates ? totalDates : 0 } nights</label>
                 <label>Discount</label>
               </div>
               <div className='grid text-gray-500/95 gap-y-0.5'>
-                <p> ${room?.pricePerNight}</p>
-                <p> ${(room?.pricePerNight) * 3}</p>
+                <p>${room?.pricePerNight}</p>
+                <p>${totalPrice}</p>
                 <p> none</p>
               </div>
             </div>
@@ -184,10 +190,17 @@ const RoomDetails = () => {
                 <label>TOTAL</label>
               </div>
               <div className='grid font-medium gap-y-0.5'>
-                <p> ${(room?.pricePerNight) * 3}</p>
+                <p> ${totalPrice}</p>
               </div>
             </div>
           </div>
+        </section>
+
+        {/* Back button */}
+        <section className='hidden lg:flex items-center'>
+          <Link to={'/properties'} className='text-blue-400 flex text-lg items-center gap-x-1 border rounded-full ps-3 pe-5'>
+            <ArrowLeft/> Back
+          </Link>
         </section>
 
         {/* Button side */}
@@ -196,7 +209,7 @@ const RoomDetails = () => {
             onClick={handleBooking}
             className='bg-blue-600 text-white/90 py-2 rounded-full hover:bg-blue-700 disabled:opacity-50'
           >
-            Book for ${(room?.pricePerNight) * 3}
+            Book for ${totalPrice}
           </button>
         </section>
       </div>
