@@ -28,7 +28,13 @@ const RegisterForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const response = await register(formData);
+    // Sanitize payload: replace empty or whitespace-only phone with null
+    const payload = {
+      ...formData,
+      phone: formData.phone?.trim() ? formData.phone.trim() : null,
+    };
+
+    const response = await register(payload);
 
     if(response.success) {
       toast.success(response.message)
@@ -37,7 +43,7 @@ const RegisterForm = () => {
           from: from
         }
       });
-    }else{
+    } else {
       toast.error(response.message)
     }
   };

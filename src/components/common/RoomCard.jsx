@@ -16,6 +16,7 @@ const RoomCard = ({ room }) => {
     if (!room?.id) return;
 
     navigate(`details/${room.id}${location?.search}`);
+    
   };
 
   return (

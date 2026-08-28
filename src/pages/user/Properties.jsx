@@ -23,7 +23,7 @@ const Properties = () => {
   // URL search parameters
   const [searchParams, setSearchParams] = useSearchParams();
 
-  // Sync URL parameters with local state & fetch data when URL changes
+  // URL parameters with local state & fetch data when URL changes
   useEffect(() => {
     const urlLocation = searchParams.get('location') || '';
     const urlCheckIn = searchParams.get('checkIn');

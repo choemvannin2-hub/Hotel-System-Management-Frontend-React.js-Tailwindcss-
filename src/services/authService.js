@@ -15,7 +15,7 @@ export const registerService = async (data) => {
         const response = await registerApi(data);
         return response.data;
     } catch (error) {
-        console.error("REGISTER ERROR:", error);
+        console.error("REGISTER ERROR:", error.response?.data);
         return error.response.data;
     }
 }

@@ -136,7 +136,7 @@ const Contact = () => {
                     value={formData.name}
                     onChange={handleChange}
                     required
-                    placeholder="John Doe"
+                    placeholder="Choem Vannin"
                     className="w-full px-4 py-2.5 bg-gray-50 text-gray-900 rounded-lg border border-gray-200 focus:bg-white focus:outline-none focus:border-blue-500 text-sm transition-all"
                   />
                 </div>
