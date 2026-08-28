@@ -4,6 +4,7 @@ import DatePicker from 'react-datepicker';
 import { Link, useNavigate } from 'react-router-dom';
 import 'react-datepicker/dist/react-datepicker.css';
 import { addDays, format } from 'date-fns';
+import {useAuth} from '../../hooks/useAuth'
 
 import slideimage from '../../assets/room slide bar.jpg';
 import view1 from '../../assets/view1.jpg';
@@ -18,6 +19,8 @@ const Home = () => {
   const [checkOut, setCheckOut] = useState(null);
   const [guests, setGuests] = useState(1);
   const [location, setLocation] = useState('');
+
+  const {user} = useAuth()
 
   const navigation = useNavigate();
 
@@ -202,7 +205,7 @@ const Home = () => {
         </div>
 
         <Link 
-          to="/login" 
+          to={!user ? '/login': '/' }
           className="text-xs lg:text-sm font-semibold text-blue-600 border border-blue-600 rounded-xl py-2 px-5 hover:bg-blue-600 hover:text-white transition shrink-0"
         >
           Sign up for bookings
