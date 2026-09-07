@@ -12,6 +12,8 @@ const LoginForm = () => {
     password: '',
   });
 
+  const [isLogin, setIsLogin] = useState(false);
+
   const { login } = useAuth();
   const navigate = useNavigate();
 
@@ -26,6 +28,7 @@ const LoginForm = () => {
     e.preventDefault();
 
     try {
+      setIsLogin(true)
       const response = await login(formData)
       customToast.success(response.message);
       
@@ -33,6 +36,8 @@ const LoginForm = () => {
     } catch (error) {
       console.error("Login failed:", error.response?.data || error.message);
       customToast.error(error.response?.data?.message || error.message)
+    } finally{
+      setIsLogin(false)
     }
   };
 
@@ -144,9 +149,12 @@ const LoginForm = () => {
             {/* Submit Button */}
             <button
               type="submit"
-              className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl shadow-md shadow-blue-500/20 transition-all active:scale-[0.99] mt-2"
+              className={(isLogin)? 
+                 'w-full py-3 bg-blue-800 hover:bg-blue-700 text-white font-semibold rounded-xl shadow-md shadow-blue-500/20 transition-all active:scale-[0.99] mt-2'
+                :'w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl shadow-md shadow-blue-500/20 transition-all active:scale-[0.99] mt-2'
+              }
             >
-              Sign In
+              {isLogin? 'Loading...': 'Sign In'}
             </button>
           </form>
 
