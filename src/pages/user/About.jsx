@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ChevronDown, ChevronUp, UserCheck } from 'lucide-react';
-import choemvannin from '../../assets/ChoemVannin.jpg';
+import choemvannin from '../../assets/ChoemVannin1.jpg';
 
 const About = () => {
   const [openBioIndex, setOpenBioIndex] = useState(null);
