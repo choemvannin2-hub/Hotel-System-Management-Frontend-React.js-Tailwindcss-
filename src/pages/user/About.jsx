@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { ChevronDown, ChevronUp, UserCheck } from 'lucide-react';
-import choemvannin from '../../assets/ChoemVannin1.jpg';
 
 const About = () => {
   const [openBioIndex, setOpenBioIndex] = useState(null);
@@ -8,42 +7,41 @@ const About = () => {
   const toggleBio = (index) => {
     setOpenBioIndex(openBioIndex === index ? null : index);
   };
-
   const credits = [
     {
       name: "Choem Vannin",
       role: "Project Manager",
-      image: choemvannin,
+      image: "ChoemVannin1.jpg",
       bio: "Computer Science student with hands-on experience in full-stack development using Java, Spring Boot, React.js, Vue.js, and SQL. Interested in backend and full-stack development, with a strong willingness to learn and grow."
     },
     {
       name: "Choem Vannin",
       role: "Business Logic",
-      image: choemvannin,
+      image: "ChoemVannin1.jpg",
       bio: "Computer Science student with hands-on experience in full-stack development using Java, Spring Boot, React.js, Vue.js, and SQL. Interested in backend and full-stack development, with a strong willingness to learn and grow."
     },
     {
       name: "Choem Vannin",
       role: "Database Design",
-      image: choemvannin,
+      image: "ChoemVannin1.jpg",
       bio: "Computer Science student with hands-on experience in full-stack development using Java, Spring Boot, React.js, Vue.js, and SQL. Interested in backend and full-stack development, with a strong willingness to learn and grow."
     },
     {
       name: "Choem Vannin",
       role: "Backend Developer",
-      image: choemvannin,
+      image: "ChoemVannin1.jpg",
       bio: "Computer Science student with hands-on experience in full-stack development using Java, Spring Boot, React.js, Vue.js, and SQL. Interested in backend and full-stack development, with a strong willingness to learn and grow."
     },
     {
       name: "Choem Vannin",
       role: "Designer",
-      image: choemvannin,
+      image: "ChoemVannin1.jpg",
       bio: "Computer Science student with hands-on experience in full-stack development using Java, Spring Boot, React.js, Vue.js, and SQL. Interested in backend and full-stack development, with a strong willingness to learn and grow."
     },
     {
       name: "Choem Vannin",
       role: "Frontend Developer",
-      image: choemvannin,
+      image: "ChoemVannin1.jpg",
       bio: "Computer Science student with hands-on experience in full-stack development using Java, Spring Boot, React.js, Vue.js, and SQL. Interested in backend and full-stack development, with a strong willingness to learn and grow."
     },
   ];
