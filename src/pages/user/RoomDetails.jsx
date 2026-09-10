@@ -9,8 +9,8 @@ import toast from 'react-hot-toast';
 import { bookingService } from '../../services/bookingService'; // added createPayment service
 import { customToast } from '../../utils/toast';
 import { paymentsService } from '../../services/paymentService';
-import PaymentPopup from '../../components/common/PaymentPopUp';
-import ReceiptPopup from '../../components/common/ReceiptPopUp';
+import PaymentPopup from '../../components/common/PaymentPopup';
+import ReceiptPopup from '../../components/common/ReceiptPopup';
 
 const RoomDetails = () => {
   const { user } = useAuth();

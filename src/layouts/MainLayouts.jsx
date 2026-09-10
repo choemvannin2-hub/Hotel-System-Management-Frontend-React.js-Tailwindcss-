@@ -3,7 +3,7 @@ import NavBar from '../components/layouts/NavBar'
 import MobileNavBar from '../components/layouts/MobileNavBar'
 import Footer from '../components/layouts/Footer'
 import { Outlet } from 'react-router-dom'
-import ScrollToTop from '../utils/scrollToTop'
+import ScrollToTop from '../utils/ScrollToTop'
 
 const MainLayouts = () => {
   return (
